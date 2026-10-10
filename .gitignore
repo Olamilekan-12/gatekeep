@@ -1,0 +1,14 @@
+# compiled binaries
+/bin/
+gatekeep
+
+# local environment
+.env
+.env.*
+!.env.example
+
+# test & coverage output
+*.out
+
+# macOS
+.DS_Store
