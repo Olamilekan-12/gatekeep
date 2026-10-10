@@ -40,9 +40,15 @@ func main() {
 		panic("something went very wrong")
 	})
 
+	handler := middleware.Chain(mux,
+		middleware.RequestID,
+		middleware.Logger,
+		middleware.Recover,
+	)
+
 	srv := &http.Server{
 		Addr:              cfg.Addr,
-		Handler:           middleware.RequestID(middleware.Logger(middleware.Recover(mux))),
+		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       15 * time.Second,
 		WriteTimeout:      15 * time.Second,
