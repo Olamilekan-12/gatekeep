@@ -42,7 +42,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              cfg.Addr,
-		Handler:           middleware.RequestID(middleware.Recover(mux)),
+		Handler:           middleware.RequestID(middleware.Logger(middleware.Recover(mux))),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       15 * time.Second,
 		WriteTimeout:      15 * time.Second,
