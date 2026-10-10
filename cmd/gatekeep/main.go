@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Olamilekan-12/gatekeep/internal/config"
+	"github.com/Olamilekan-12/gatekeep/internal/middleware"
 )
 
 func main() {
@@ -35,9 +36,13 @@ func main() {
 		time.Sleep(5 * time.Second)
 		w.Write([]byte("done\n"))
 	})
+	mux.HandleFunc("GET /panic", func(w http.ResponseWriter, r *http.Request) {
+		panic("something went very wrong")
+	})
+
 	srv := &http.Server{
 		Addr:              cfg.Addr,
-		Handler:           mux,
+		Handler:           middleware.RequestID(middleware.Recover(mux)),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       15 * time.Second,
 		WriteTimeout:      15 * time.Second,
@@ -68,4 +73,6 @@ func main() {
 		_ = srv.Close()
 		os.Exit(1)
 	}
+
+	slog.Info("shutdown complete")
 }
